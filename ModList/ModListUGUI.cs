@@ -276,6 +276,8 @@ public class ModListUGUI : MonoBehaviour
 
     private int _currentSelectMod = -1;
 
+    private readonly List<MenuPerkPreview> _perkPreviews = [];
+
     private void Awake()
     {
         for (var i = 0; i < FilterButtons.Length; i++)
@@ -332,11 +334,6 @@ public class ModListUGUI : MonoBehaviour
         return btn;
     }
 
-    private void AddModPerk()
-    {
-        Instantiate(ModPerkPrefab, ModPerkParent);
-    }
-
     private void SelectMod(int index)
     {
         if (index >= _mods.Length || index == _currentSelectMod) return;
@@ -365,5 +362,26 @@ public class ModListUGUI : MonoBehaviour
         if (!string.IsNullOrWhiteSpace(mod.Author)) desc.Append($"{Localization.ModAuthor}: {mod.Author}\n");
         desc.Append(mod.Desc);
         ModDesc.text = desc.ToString();
+
+        SetupModPerks(mod.Perks);
+    }
+
+    private void SetupModPerks(CharacterPerk[] perks)
+    {
+        foreach (var preview in _perkPreviews)
+        {
+            preview.gameObject.SetActive(false);
+        }
+
+        if (perks is null) return;
+
+        for (var i = 0; i < perks.Length; i++)
+        {
+            if (i >= _perkPreviews.Count) _perkPreviews.Add(Instantiate(ModPerkPrefab, ModPerkParent));
+
+            var preview = _perkPreviews[i];
+            preview.Setup(perks[i]);
+            preview.gameObject.SetActive(true);
+        }
     }
 }

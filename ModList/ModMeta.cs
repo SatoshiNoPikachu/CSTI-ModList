@@ -65,6 +65,11 @@ public class ModMeta
     internal Sprite SpriteIcon;
 
     /// <summary>
+    /// 模组特质
+    /// </summary>
+    internal CharacterPerk[] Perks;
+
+    /// <summary>
     /// 是否是ME模组
     /// </summary>
     internal bool IsMeMod => !string.IsNullOrWhiteSpace(MeName);

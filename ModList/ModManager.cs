@@ -96,6 +96,7 @@ public class ModManager
 
         LoadPluginMetas();
         RemoveInvalidMetas();
+        LoadModPerks();
 
         return SortMeta();
     }
@@ -246,6 +247,39 @@ public class ModManager
         _allMetas.RemoveAll(meta => !meta.CheckValid());
     }
 
+    /// <summary>
+    /// 加载模组特质
+    /// </summary>
+    private void LoadModPerks()
+    {
+        var perks = UnityEngine.Object.FindObjectsOfType<CharacterPerk>();
+        var cache = new Dictionary<string, List<CharacterPerk>>();
+
+        foreach (var perk in perks)
+        {
+            var name = perk.name;
+            if (name.StartsWith("Pk_")) continue;
+
+            var index = name.IndexOf('_');
+            if (index is -1) continue;
+
+            var modName = name.Substring(0, index);
+            if (!_meMetas.ContainsKey(modName)) continue;
+
+            if (cache.TryGetValue(modName, out var list)) list.Add(perk);
+            else cache[modName] = [perk];
+        }
+
+        foreach (var (name, list) in cache)
+        {
+            _meMetas[name].Perks = list.ToArray();
+        }
+    }
+
+    /// <summary>
+    /// 排序
+    /// </summary>
+    /// <returns>排序后的元数据数组</returns>
     private ModMeta[] SortMeta()
     {
         return _allMetas.OrderByDescending(GetMetaPriority).ToArray();

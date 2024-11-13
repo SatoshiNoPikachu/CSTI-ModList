@@ -10,7 +10,7 @@ internal class Plugin : BaseUnityPlugin
 {
     public const string PluginGuid = "Pikachu.CSTI.ModList";
     public const string PluginName = "ModList";
-    public const string PluginVersion = "1.1.0";
+    public const string PluginVersion = "1.2.0";
 
     public static Plugin Instance = null!;
     public static ManualLogSource Log = null!;

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using UnityEngine;
 
 namespace ModList;
 
@@ -37,6 +38,11 @@ public class Mod(ModMeta meta)
     /// 图标
     /// </summary>
     public Sprite Icon { get; } = meta.SpriteIcon;
+
+    /// <summary>
+    /// 模组特质
+    /// </summary>
+    public CharacterPerk[] Perks { get; } = meta.Perks?.ToArray();
 
     /// <summary>
     /// 是否已启用
