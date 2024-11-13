@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using BepInEx;
 using BepInEx.Bootstrap;
 using LitJson;
@@ -70,16 +71,24 @@ public class ModManager
     /// </summary>
     private readonly List<ModMeta> _allMetas = [];
 
+    private ModMeta _metaBepInEx;
+
+    private ModMeta _metaModLoader;
+
+    private ModMeta _metaModList;
+
     private ModManager()
     {
     }
-    
+
     /// <summary>
     /// 获取元数据
     /// </summary>
     /// <returns>元数据数组</returns>
     private ModMeta[] GetMetas()
     {
+        LoadBepInExMeta();
+
         CheckModLoader();
 
         if (ModLoaderInstalled) LoadMeMetas();
@@ -88,7 +97,33 @@ public class ModManager
         LoadPluginMetas();
         RemoveInvalidMetas();
 
-        return _allMetas.ToArray();
+        return SortMeta();
+    }
+
+    private void LoadBepInExMeta()
+    {
+        var assemblyName = typeof(Chainloader).Assembly.GetName();
+        var name = assemblyName.Name;
+        var version = assemblyName.Version.ToString();
+
+        var meta = new ModMeta
+        {
+            Description = new Dictionary<string, string>
+            {
+                ["En"] =
+                    "BepInEx is a patcher/plug-in framework for Unity games that use Mono as their scripting backend.",
+                ["SimpCn"] = "BepInEx是一个适用于使用Mono作为脚本后端的Unity游戏的补丁/插件框架。"
+            },
+            Author = name,
+            Version = version,
+            Icon = "Resource/BepInex.png",
+            PluginName = []
+        };
+        meta.PluginName[name] = name;
+        meta.LoadIcon(Plugin.PluginPath);
+
+        _metaBepInEx = meta;
+        _allMetas.Add(meta);
     }
 
     /// <summary>
@@ -190,6 +225,16 @@ public class ModManager
 
             meta.AddPluginName(guid, info.Metadata.Name);
             meta.TrySetVersion(info.Metadata.Version.ToString());
+
+            switch (guid)
+            {
+                case "Dop.plugin.CSTI.ModLoader":
+                    _metaModLoader = meta;
+                    break;
+                case Plugin.PluginGuid:
+                    _metaModList = meta;
+                    break;
+            }
         }
     }
 
@@ -199,6 +244,18 @@ public class ModManager
     private void RemoveInvalidMetas()
     {
         _allMetas.RemoveAll(meta => !meta.CheckValid());
+    }
+
+    private ModMeta[] SortMeta()
+    {
+        return _allMetas.OrderByDescending(GetMetaPriority).ToArray();
+    }
+
+    private int GetMetaPriority(ModMeta meta)
+    {
+        if (meta == _metaBepInEx) return 3;
+        if (meta == _metaModLoader) return 2;
+        return meta == _metaModList ? 1 : 0;
     }
 
     /// <summary>

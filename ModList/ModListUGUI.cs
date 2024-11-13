@@ -132,6 +132,7 @@ public class ModListUGUI : MonoBehaviour
         ]);
         modBtn.Text = "模组名称";
         modBtn.Icon.sprite = spriteWhite;
+        modBtn.GetComponent<Image>("Frame/BG").sprite = null;
         mb.ModButtonPrefab = modBtn;
         UIManager.RegisterPrefab("ModList_ModButton", modBtn);
 
@@ -188,6 +189,8 @@ public class ModListUGUI : MonoBehaviour
 
         var imageFrame = imageAndDesc.Find("ImageFrame");
         imageFrame.localPosition = new Vector3(0, -55);
+
+        imageFrame.GetComponent<Image>("BG").sprite = null;
 
         var modImg = imageFrame.GetComponent<Image>("Mask/CharacterPortrait");
         modImg.name = "ModImage";

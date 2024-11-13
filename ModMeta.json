@@ -1,0 +1,14 @@
+{
+  "Name": {
+    "SimpCn": "模组列表",
+    "En": "Mod List"
+  },
+  "Description": {
+    "SimpCn": "为游戏添加了模组列表UI界面，帮助玩家浏览已安装模组的信息。",
+    "En": "Mod List is a functional mod that adds a mod list UI to the game, helping players browse information about installed mods."
+  },
+  "Author": "Pikachu",
+  "Version": "",
+  "Icon": "",
+  "PluginGuid": []
+}

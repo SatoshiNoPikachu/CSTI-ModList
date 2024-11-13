@@ -107,7 +107,7 @@ public class ModMeta
     /// <param name="path">路径</param>
     public void LoadIcon(string path)
     {
-        var pathDir = Path.GetDirectoryName(path);
+        var pathDir = Directory.Exists(path) ? path : Path.GetDirectoryName(path);
         if (string.IsNullOrEmpty(path)) return;
 
         var pathIcon = Path.Combine(pathDir!, Icon);
@@ -148,7 +148,10 @@ public class ModMeta
     /// <returns>名称</returns>
     public string GetName()
     {
-        if (Name?.TryGetValue(Localization.CurrentLanguage, out var name) is true) return name;
+        if (Name is { Count: > 0 })
+        {
+            return Name.TryGetValue(Localization.CurrentLanguage, out var name) ? name : Name.First().Value;
+        }
 
         if (MeName is not null) return MeName;
 
@@ -163,7 +166,9 @@ public class ModMeta
     /// <returns></returns>
     public string GetDesc()
     {
-        return Description?.TryGetValue(Localization.CurrentLanguage, out var desc) is true ? desc : "";
+        if (Description is null or { Count: 0 }) return "";
+
+        return Description.TryGetValue(Localization.CurrentLanguage, out var desc) ? desc : Description.First().Value;
     }
 
     /// <summary>
