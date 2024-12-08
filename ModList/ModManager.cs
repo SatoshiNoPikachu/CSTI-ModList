@@ -75,6 +75,8 @@ public class ModManager
 
     private ModMeta _metaModLoader;
 
+    private ModMeta _metaModCore;
+
     private ModMeta _metaModList;
 
     private ModManager()
@@ -232,6 +234,9 @@ public class ModManager
                 case "Dop.plugin.CSTI.ModLoader":
                     _metaModLoader = meta;
                     break;
+                case "Pikachu.CSTI.ModCore":
+                    _metaModCore = meta;
+                    break;
                 case Plugin.PluginGuid:
                     _metaModList = meta;
                     break;
@@ -287,8 +292,9 @@ public class ModManager
 
     private int GetMetaPriority(ModMeta meta)
     {
-        if (meta == _metaBepInEx) return 3;
-        if (meta == _metaModLoader) return 2;
+        if (meta == _metaBepInEx) return 4;
+        if (meta == _metaModLoader) return 3;
+        if (meta == _metaModCore) return 2;
         return meta == _metaModList ? 1 : 0;
     }
 

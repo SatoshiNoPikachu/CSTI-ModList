@@ -1,28 +1,27 @@
-﻿using System.IO;
-using BepInEx;
-using BepInEx.Logging;
+﻿using BepInEx;
 using HarmonyLib;
+using ModCore;
+using ModCore.Services;
 
 namespace ModList;
 
+[BepInDependency("Pikachu.CSTI.ModCore")]
 [BepInPlugin(PluginGuid, PluginName, PluginVersion)]
-internal class Plugin : BaseUnityPlugin
+internal class Plugin : BaseUnityPlugin<Plugin>
 {
     public const string PluginGuid = "Pikachu.CSTI.ModList";
     public const string PluginName = "ModList";
-    public const string PluginVersion = "1.2.0";
+    public const string PluginVersion = "2.0.0";
 
-    public static Plugin Instance = null!;
-    public static ManualLogSource Log = null!;
     private static readonly Harmony Harmony = new(PluginGuid);
 
-    public static string PluginPath => Path.GetDirectoryName(Instance.Info.Location);
-
-    private void Awake()
+    protected override void Awake()
     {
-        Instance = this;
-        Log = Logger;
+        base.Awake();
         Harmony.PatchAll();
-        Log.LogInfo($"Plugin {PluginName} is loaded!");
+
+        LocalizationService.RegisterPath(PluginPath, Localization.KeyPrefix);
+
+        Log.LogMessage($"Plugin {PluginName} is loaded!");
     }
 }
