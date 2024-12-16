@@ -344,9 +344,9 @@ public class ModManager
             meta.LoadIcon(path);
             return meta;
         }
-        catch (Exception)
+        catch (Exception e)
         {
-            Plugin.Log.LogWarning($"Failed to load ModMeta from '{Path.GetDirectoryName(path)}'.");
+            Plugin.Log.LogWarning($"Failed to load ModMeta from '{Path.GetDirectoryName(path)}'. Exception: {e}");
             return null;
         }
     }

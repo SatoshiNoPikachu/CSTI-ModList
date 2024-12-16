@@ -112,6 +112,8 @@ public class ModMeta
     /// <param name="path">路径</param>
     public void LoadIcon(string path)
     {
+        if (string.IsNullOrWhiteSpace(Icon)) return;
+
         var pathDir = Directory.Exists(path) ? path : Path.GetDirectoryName(path);
         if (string.IsNullOrEmpty(path)) return;
 
